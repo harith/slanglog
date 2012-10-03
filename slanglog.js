@@ -44,7 +44,7 @@ function Slanglog() {
      */
     for ( var level in this.Levels ) {
         if ( this.Levels.hasOwnProperty(level) ) {
-            this[level.toLowerCase()] = getHandlerForLog(level);
+            this[level.toLowerCase()] = getLogLevelHandler(level);
         }
     }
 
