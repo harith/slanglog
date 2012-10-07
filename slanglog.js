@@ -1,51 +1,67 @@
-function Slanglog() {
+var slanglog = slanglog || {};
+
+(function(app) {
 
     "use strict";
 
     /** 
-     * Available logging levels.
+     * Available log levels.
      * The order matters!
      */  
-    var definedLoggingLevels = [ "FYI", "OOPS", "OMG", "WTF", "FAIL", "EPICFAIL" ];
+    var logLevels = [ "FYI", "OOPS", "OMG", "WTF", "FAIL", "EPICFAIL" ];
 
     /** 
-     * An enum-esque object for users to access available logging levels. 
-     * It will look like this: { FYI : 1, OOPS : 2, OMG : 3, …}
+     * An enum-esque object for users to access available log levels. 
+     * It will look like app: { FYI : 1, OOPS : 2, OMG : 3, …}
      */
-    this.Levels = {};
-    for ( var i=0; i<definedLoggingLevels.length; i++ ) {
-        this.Levels[definedLoggingLevels[i]] = i;
+    app.Levels = {};
+    for ( var i=0; i<logLevels.length; i++ ) {
+        app.Levels[logLevels[i]] = i;
     }
 
     /** 
-     * Set a default logging level. 
-     * Logging level can also be set by user externally.
+     * Set a default log level. 
+     * Log level can also be set by user externally.
      *
      * example:
-     *   var logger   = Slanglog();
-     *   logger.level = logger.Levels.FAIL;
+     *   slanglog.level = slanglog.Levels.FAIL;
      */
-    this.level = this.Levels.WTF;
+    app.level = app.Levels.WTF;
 
     var getLogLevelHandler = function( choice ) {
         return function( message ) {
-            if ( this.Levels[choice] >= this.level ) {
+            if ( app.Levels[choice] >= app.level ) {
                 console.log( choice + " : " + message );
             }
         };
     };
 
     /** 
-     * Assign handlers for each logging level defined above.
+     * Assign handlers for each log level defined above.
      *
      * example:
-     *   var logger = Slanglog();
-     *   logger.wtf("this is unexpected!");
+     *   slanglog.wtf("app is unexpected!");
      */
-    for ( var level in this.Levels ) {
-        if ( this.Levels.hasOwnProperty(level) ) {
-            this[level.toLowerCase()] = getLogLevelHandler(level);
+    function assignHandlersToLogLevels(object) {
+        for ( var level in app.Levels ) {
+            if ( app.Levels.hasOwnProperty(level) ) {
+                object[level.toLowerCase()] = getLogLevelHandler(level);
+            }
         }
     }
 
-}
+    assignHandlersToLogLevels(app);
+
+    /** 
+     * Allows you to pollute global namespace.
+     *
+     * Instead of doing this
+     *   slanglog.wtf( "something is wrong!" );
+     * You can do this
+     *   wtf( "something is wrong!" );
+     */
+    app.pollute = function() {
+        assignHandlersToLogLevels(window);
+    };
+
+})(slanglog);
