@@ -39,7 +39,7 @@ you can do,
     wtf( "this shouldn't be happening!" );
 ```
 
-*Breath some life into your code.*
+*Breathe some life into your code.*
 
 
 Logging levels
